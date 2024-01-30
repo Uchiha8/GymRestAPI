@@ -1,15 +1,14 @@
 package com.epam.controller;
 
 import com.epam.dto.request.TrainerRegistrationRequest;
+import com.epam.dto.request.UpdateTrainerRequest;
 import com.epam.dto.response.RegistrationResponse;
+import com.epam.dto.response.UpdateTrainerResponse;
 import com.epam.service.TrainerService;
 import com.epam.utils.validation.ValidModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/trainers")
@@ -33,4 +32,27 @@ public class TrainerController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> profile(@RequestParam String username) {
+        try {
+            validModule.usernameValid(username);
+            return ResponseEntity.ok(trainerService.findByUsername(username));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> update(@RequestBody UpdateTrainerRequest request) {
+        try {
+            validModule.updateTrainer(request);
+            UpdateTrainerResponse response = trainerService.update(request);
+            return ResponseEntity.status(201).body(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    //TODO: Get not assigned on trainee active trainers
+
 }

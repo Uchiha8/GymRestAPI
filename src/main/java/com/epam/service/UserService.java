@@ -32,6 +32,10 @@ public class UserService {
         throw new UserNotFoundException("User with username " + username + " not found");
     }
 
+    public User update(User user) {
+        return userRepository.update(user);
+    }
+
     public void updatePassword(ChangeLogin request) {
         User user = findByUsername(request.username());
         if (user != null) {

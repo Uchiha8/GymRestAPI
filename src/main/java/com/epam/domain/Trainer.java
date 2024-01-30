@@ -13,7 +13,7 @@ public class Trainer {
     private TrainingType trainingType;
     @OneToOne(cascade = CascadeType.ALL)
     private User user;
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Training> trainings;
 
     public Trainer(TrainingType trainingType, User user, List<Training> trainings) {

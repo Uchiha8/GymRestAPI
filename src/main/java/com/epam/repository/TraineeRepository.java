@@ -32,4 +32,29 @@ public class TraineeRepository {
         }
     }
 
+    public Trainee findByUsername(String username) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("select t from Trainee t where t.user.username = :username", Trainee.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+        }
+    }
+
+    public Trainee update(Trainee trainee) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.merge(trainee);
+            session.getTransaction().commit();
+            return trainee;
+        }
+    }
+
+    public void delete(Trainee trainee) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.remove(trainee);
+            session.getTransaction().commit();
+        }
+    }
+
 }

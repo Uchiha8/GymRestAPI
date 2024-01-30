@@ -45,12 +45,20 @@ public class UserRepository {
         }
     }
 
-    // we need to update password in database
     public void updatePassword(User user) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.merge(user);
             session.getTransaction().commit();
+        }
+    }
+
+    public User update(User user) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.merge(user);
+            session.getTransaction().commit();
+            return user;
         }
     }
 

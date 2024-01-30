@@ -24,4 +24,37 @@ public class TrainerRepository {
             return trainer;
         }
     }
+
+    public boolean existsByUsername(String username) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("select count(t) > 0 from Trainer t where t.user.username = :username", Boolean.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+        }
+    }
+
+    public Trainer findByUsername(String username) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("select t from Trainer t where t.user.username = :username", Trainer.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+        }
+    }
+
+    public Trainer update(Trainer trainer) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.merge(trainer);
+            session.getTransaction().commit();
+            return trainer;
+        }
+    }
+
+    public void delete(Trainer trainer) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.remove(trainer);
+            session.getTransaction().commit();
+        }
+    }
 }
