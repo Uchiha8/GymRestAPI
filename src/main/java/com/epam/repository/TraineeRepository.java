@@ -57,4 +57,17 @@ public class TraineeRepository {
         }
     }
 
+   public void updateStatus(String username, boolean status) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.createQuery("update User u set u.active = :status where u.username = :username")
+                    .setParameter("status", status)
+                    .setParameter("username", username)
+                    .executeUpdate();
+            session.getTransaction().commit();
+        }
+    }
+
+
+
 }

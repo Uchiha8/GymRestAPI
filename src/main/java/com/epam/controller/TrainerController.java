@@ -1,5 +1,6 @@
 package com.epam.controller;
 
+import com.epam.dto.request.StatusRequest;
 import com.epam.dto.request.TrainerRegistrationRequest;
 import com.epam.dto.request.UpdateTrainerRequest;
 import com.epam.dto.response.RegistrationResponse;
@@ -55,4 +56,24 @@ public class TrainerController {
     }
     //TODO: Get not assigned on trainee active trainers
 
+    @GetMapping("/active/trainers")
+    public ResponseEntity<?> getActiveTrainers(@RequestParam String username) {
+        try {
+            validModule.usernameValid(username);
+            return ResponseEntity.ok(trainerService.activeTrainers(username));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/updateStatus")
+    public ResponseEntity<?> updateStatus(@RequestBody StatusRequest request) {
+        try {
+            validModule.updateStatus(request);
+            trainerService.updateStatus(request);
+            return ResponseEntity.ok().body("Trainer with username " + request.username() + " status updated");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

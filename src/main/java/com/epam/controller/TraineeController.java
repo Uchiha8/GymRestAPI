@@ -1,5 +1,7 @@
 package com.epam.controller;
 
+import com.epam.dto.request.ChangeLogin;
+import com.epam.dto.request.StatusRequest;
 import com.epam.dto.request.TraineeRegistrationRequest;
 import com.epam.dto.request.UpdateTraineeRequest;
 import com.epam.dto.response.RegistrationResponse;
@@ -60,6 +62,17 @@ public class TraineeController {
             validModule.usernameValid(username);
             traineeService.deleteByUsername(username);
             return ResponseEntity.ok().body("Trainee with username " + username + " deleted");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/updateStatus")
+    public ResponseEntity<?> updateStatus(@RequestBody StatusRequest request) {
+        try {
+            validModule.updateStatus(request);
+            traineeService.updateStatus(request);
+            return ResponseEntity.ok().body("Trainee with username " + request.username() + " status updated");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

@@ -83,4 +83,25 @@ public class ValidModule {
     }
 
 
+    public void trainingRequest(TrainingRequest request) {
+        if (request.traineeUsername() == null) {
+            throw new IllegalArgumentException("Trainee username is null");
+        } else if (request.trainerUsername() == null) {
+            throw new IllegalArgumentException("Trainer username is null");
+        } else if (request.trainingName() == null) {
+            throw new IllegalArgumentException("Training name is null");
+        } else if (request.trainingDate() == null) {
+            throw new IllegalArgumentException("Training date is null");
+        } else if (request.duration() == null) {
+            throw new IllegalArgumentException("Duration is null");
+        }
+    }
+
+    public void updateStatus(StatusRequest request) {
+        if (request.username() == null) {
+            throw new IllegalArgumentException("Username is null");
+        } else if (request.isActive() == null) {
+            throw new IllegalArgumentException("Is active is null");
+        }
+    }
 }

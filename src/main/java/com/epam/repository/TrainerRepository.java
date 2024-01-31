@@ -7,6 +7,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class TrainerRepository {
     private final SessionFactory sessionFactory;
@@ -54,6 +56,23 @@ public class TrainerRepository {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.remove(trainer);
+            session.getTransaction().commit();
+        }
+    }
+
+    public List<Trainer> activeTrainers() {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("select t from Trainer t where t.user.active = true", Trainer.class)
+                    .getResultList();
+        }
+    }
+    public void updateStatus(String username, boolean status) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.createQuery("update User u set u.active = :status where u.username = :username")
+                    .setParameter("status", status)
+                    .setParameter("username", username)
+                    .executeUpdate();
             session.getTransaction().commit();
         }
     }

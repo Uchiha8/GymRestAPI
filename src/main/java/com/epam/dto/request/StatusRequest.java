@@ -2,9 +2,9 @@ package com.epam.dto.request;
 
 import jakarta.persistence.Column;
 
-public record Login(
+public record StatusRequest(
         @Column(nullable = false)
         String username,
         @Column(nullable = false)
-        String password) {
+        Boolean isActive) {
 }

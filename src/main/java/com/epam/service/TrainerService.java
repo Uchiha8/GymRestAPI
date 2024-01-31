@@ -1,18 +1,19 @@
 package com.epam.service;
 
-import com.epam.domain.Trainer;
-import com.epam.domain.Training;
-import com.epam.domain.TrainingType;
-import com.epam.domain.User;
+import com.epam.domain.*;
+import com.epam.dto.request.ChangeLogin;
+import com.epam.dto.request.StatusRequest;
 import com.epam.dto.request.TrainerRegistrationRequest;
 import com.epam.dto.request.UpdateTrainerRequest;
 import com.epam.dto.response.*;
 import com.epam.repository.TrainerRepository;
+import com.epam.utils.exception.TraineeNotFoundException;
 import com.epam.utils.exception.TrainerNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -101,4 +102,30 @@ public class TrainerService {
         Trainer trainer = trainerRepository.findByUsername(username);
         trainerRepository.delete(trainer);
     }
+
+    public List<TrainersList> activeTrainers(String username) {
+        if (!userService.existsByUsername(username)) {
+            throw new RuntimeException("User with username " + username + " not found");
+        }
+        return trainerRepository.activeTrainers().stream()
+                .flatMap(trainer -> trainer.getTrainings().stream())
+                .filter(training -> !training.getTrainee().getUser().getUsername().equals(username))
+                .map(training -> new TrainersList(
+                        training.getTrainer().getUser().getUsername(),
+                        training.getTrainer().getUser().getFirstName(),
+                        training.getTrainer().getUser().getLastName(),
+                        training.getTrainer().getTrainingType()))
+                .toList();
+    }
+
+    public void updateStatus(StatusRequest request) {
+        if (!trainerRepository.existsByUsername(request.username())) {
+            throw new RuntimeException("Trainer with username " + request.username() + " not found");
+        }
+        if (trainerRepository.findByUsername(request.username()).getUser().getActive().equals(request.isActive())) {
+            throw new RuntimeException("Trainer with username " + request.username() + " already has status " + request.isActive());
+        }
+        trainerRepository.updateStatus(request.username(), request.isActive());
+    }
+
 }

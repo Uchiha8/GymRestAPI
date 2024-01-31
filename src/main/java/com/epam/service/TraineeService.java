@@ -4,6 +4,8 @@ import com.epam.domain.Trainee;
 import com.epam.domain.Trainer;
 import com.epam.domain.Training;
 import com.epam.domain.User;
+import com.epam.dto.request.ChangeLogin;
+import com.epam.dto.request.StatusRequest;
 import com.epam.dto.request.TraineeRegistrationRequest;
 import com.epam.dto.request.UpdateTraineeRequest;
 import com.epam.dto.response.RegistrationResponse;
@@ -109,6 +111,20 @@ public class TraineeService {
         }
         Trainee trainee = traineeRepository.findByUsername(username);
         traineeRepository.delete(trainee);
+    }
+
+    public boolean existsByUsername(String username) {
+        return traineeRepository.existsByUsername(username);
+    }
+
+    public void updateStatus(StatusRequest request) {
+        if (!traineeRepository.existsByUsername(request.username())) {
+            throw new TraineeNotFoundException("Trainee with username " + request.username() + " not found");
+        }
+        if (traineeRepository.findByUsername(request.username()).getUser().getActive().equals(request.isActive())) {
+            throw new RuntimeException("Trainee with username " + request.username() + " already has status " + request.isActive());
+        }
+        traineeRepository.updateStatus(request.username(), request.isActive());
     }
 
 }
