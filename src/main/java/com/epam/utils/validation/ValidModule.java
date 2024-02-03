@@ -104,4 +104,16 @@ public class ValidModule {
             throw new IllegalArgumentException("Is active is null");
         }
     }
+
+    public void traineeTrainings(TraineeTrainingsRequest request) {
+        if (request.username() == null) {
+            throw new IllegalArgumentException("Username is nullasdasd");
+        }
+    }
+
+    public void trainerTrainings(TrainerTrainingsRequest request) {
+        if (request.username() == null) {
+            throw new IllegalArgumentException("Username is null");
+        }
+    }
 }

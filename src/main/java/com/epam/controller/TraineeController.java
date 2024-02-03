@@ -1,9 +1,6 @@
 package com.epam.controller;
 
-import com.epam.dto.request.ChangeLogin;
-import com.epam.dto.request.StatusRequest;
-import com.epam.dto.request.TraineeRegistrationRequest;
-import com.epam.dto.request.UpdateTraineeRequest;
+import com.epam.dto.request.*;
 import com.epam.dto.response.RegistrationResponse;
 import com.epam.dto.response.UpdateTraineeResponse;
 import com.epam.service.TraineeService;
@@ -40,6 +37,16 @@ public class TraineeController {
         try {
             validModule.usernameValid(username);
             return ResponseEntity.ok().body(traineeService.findByUsername(username));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/readAll/trainings")
+    public ResponseEntity<?> getAllTraineeTrainings(@RequestBody TraineeTrainingsRequest request) {
+        try {
+            validModule.traineeTrainings(request);
+            return ResponseEntity.ok().body(traineeService.readTraineeTrainings(request));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

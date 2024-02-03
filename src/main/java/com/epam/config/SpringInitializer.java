@@ -15,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ComponentScan({"com.epam"})
 public class SpringInitializer implements WebMvcConfigurer {
     @Bean
+    @Scope("prototype")
     public SessionFactory sessionFactory() {
         return new MetadataSources(
                 new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build()

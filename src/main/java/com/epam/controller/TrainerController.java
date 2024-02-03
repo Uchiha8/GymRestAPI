@@ -2,6 +2,7 @@ package com.epam.controller;
 
 import com.epam.dto.request.StatusRequest;
 import com.epam.dto.request.TrainerRegistrationRequest;
+import com.epam.dto.request.TrainerTrainingsRequest;
 import com.epam.dto.request.UpdateTrainerRequest;
 import com.epam.dto.response.RegistrationResponse;
 import com.epam.dto.response.UpdateTrainerResponse;
@@ -29,7 +30,7 @@ public class TrainerController {
             validModule.trainerRegistration(request);
             RegistrationResponse response = trainerService.save(request);
             return ResponseEntity.status(201).body(response);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -39,7 +40,7 @@ public class TrainerController {
         try {
             validModule.usernameValid(username);
             return ResponseEntity.ok(trainerService.findByUsername(username));
-        } catch (IllegalArgumentException e) {
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -54,13 +55,22 @@ public class TrainerController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    //TODO: Get not assigned on trainee active trainers
 
     @GetMapping("/active/trainers")
     public ResponseEntity<?> getActiveTrainers(@RequestParam String username) {
         try {
             validModule.usernameValid(username);
             return ResponseEntity.ok(trainerService.activeTrainers(username));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("readAll/trainings")
+    public ResponseEntity<?> getAllTrainerTrainings(@RequestBody TrainerTrainingsRequest request) {
+        try {
+            validModule.trainerTrainings(request);
+            return ResponseEntity.ok(trainerService.readTrainerTrainings(request));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

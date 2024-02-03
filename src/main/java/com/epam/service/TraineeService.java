@@ -1,18 +1,10 @@
 package com.epam.service;
 
-import com.epam.domain.Trainee;
-import com.epam.domain.Trainer;
-import com.epam.domain.Training;
-import com.epam.domain.User;
-import com.epam.dto.request.ChangeLogin;
-import com.epam.dto.request.StatusRequest;
-import com.epam.dto.request.TraineeRegistrationRequest;
-import com.epam.dto.request.UpdateTraineeRequest;
-import com.epam.dto.response.RegistrationResponse;
-import com.epam.dto.response.TraineeProfileResponse;
-import com.epam.dto.response.TrainersList;
-import com.epam.dto.response.UpdateTraineeResponse;
+import com.epam.domain.*;
+import com.epam.dto.request.*;
+import com.epam.dto.response.*;
 import com.epam.repository.TraineeRepository;
+import com.epam.repository.TrainingTypeRepository;
 import com.epam.utils.exception.TraineeNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +20,14 @@ public class TraineeService {
     private final TraineeRepository traineeRepository;
     private final UserService userService;
 
+    private final TrainingTypeRepository trainingTypeRepository;
+
+
     @Autowired
-    public TraineeService(TraineeRepository traineeRepository, UserService userService) {
+    public TraineeService(TraineeRepository traineeRepository, UserService userService, TrainingTypeRepository trainingTypeRepository) {
         this.traineeRepository = traineeRepository;
         this.userService = userService;
+        this.trainingTypeRepository = trainingTypeRepository;
     }
 
     public RegistrationResponse save(TraineeRegistrationRequest request) {
@@ -113,10 +109,6 @@ public class TraineeService {
         traineeRepository.delete(trainee);
     }
 
-    public boolean existsByUsername(String username) {
-        return traineeRepository.existsByUsername(username);
-    }
-
     public void updateStatus(StatusRequest request) {
         if (!traineeRepository.existsByUsername(request.username())) {
             throw new TraineeNotFoundException("Trainee with username " + request.username() + " not found");
@@ -127,4 +119,36 @@ public class TraineeService {
         traineeRepository.updateStatus(request.username(), request.isActive());
     }
 
+    public List<TraineeTrainingsResponse> readTraineeTrainings(TraineeTrainingsRequest request) {
+        if (!traineeRepository.existsByUsername(request.username())) {
+            throw new TraineeNotFoundException("Trainee with username " + request.username() + " not found");
+        }
+        List<TraineeTrainingsResponse> traineeTrainingsResponses = new ArrayList<>();
+        List<Training> trainings = traineeRepository.getTrainings(request.username());
+        if (request.trainerUsername() != null) {
+            if (!userService.existsByUsername(request.trainerUsername())) {
+                throw new RuntimeException("Trainer with username " + request.trainerUsername() + " not found");
+            }
+            trainings = trainings.stream()
+                    .filter(training -> training.getTrainer().getUser().getUsername().equals(request.trainerUsername()))
+                    .toList();
+        } else if (request.trainingType() != null) {
+            if(!trainingTypeRepository.existsByName(request.trainingType())) {
+                throw new RuntimeException("Training type with name " + request.trainingType() + " not found");
+            }
+            trainings = trainings.stream()
+                    .filter(training -> training.getTrainer().getTrainingType().getName().equals(request.trainingType()))
+                    .toList();
+        }
+        for (Training training : trainings) {
+            traineeTrainingsResponses.add(new TraineeTrainingsResponse(
+                    training.getTrainingName(),
+                    training.getTrainingDate(),
+                    training.getTrainer().getTrainingType().getName(),
+                    training.getDuration(),
+                    training.getTrainer().getUser().getUsername()
+            ));
+        }
+        return traineeTrainingsResponses;
+    }
 }

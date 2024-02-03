@@ -31,6 +31,6 @@ public class TrainingController {
             return ResponseEntity.status(201).body(response);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        }
+            }
     }
 }

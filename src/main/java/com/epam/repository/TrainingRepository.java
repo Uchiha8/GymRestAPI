@@ -1,6 +1,9 @@
 package com.epam.repository;
 
+import com.epam.domain.Trainee;
+import com.epam.domain.Trainer;
 import com.epam.domain.Training;
+import com.epam.domain.TrainingType;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;

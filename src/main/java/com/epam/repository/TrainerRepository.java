@@ -2,6 +2,7 @@ package com.epam.repository;
 
 import com.epam.domain.Trainee;
 import com.epam.domain.Trainer;
+import com.epam.domain.Training;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,14 +53,6 @@ public class TrainerRepository {
         }
     }
 
-    public void delete(Trainer trainer) {
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            session.remove(trainer);
-            session.getTransaction().commit();
-        }
-    }
-
     public List<Trainer> activeTrainers() {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("select t from Trainer t where t.user.active = true", Trainer.class)
@@ -74,6 +67,14 @@ public class TrainerRepository {
                     .setParameter("username", username)
                     .executeUpdate();
             session.getTransaction().commit();
+        }
+    }
+
+    public List<Training> getTrainings(String username) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("select t from Training t where t.trainer.user.username = :username", Training.class)
+                    .setParameter("username", username)
+                    .getResultList();
         }
     }
 }

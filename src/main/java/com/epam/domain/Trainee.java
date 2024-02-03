@@ -15,7 +15,7 @@ public class Trainee {
     private String address;
     @OneToOne(cascade = CascadeType.ALL)
     private User user;
-    @OneToMany(mappedBy = "trainee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "trainee", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Training> trainings;
 
     public Trainee(Date dateOfBirth, String address, User user, List<Training> trainings) {

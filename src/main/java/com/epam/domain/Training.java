@@ -10,13 +10,13 @@ public class Training {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
     private Trainee trainee;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Trainer trainer;
     @Column(nullable = false)
     private String trainingName;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private TrainingType trainingType;
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)

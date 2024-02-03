@@ -1,10 +1,14 @@
 package com.epam.repository;
 
 import com.epam.domain.Trainee;
+import com.epam.domain.Training;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class TraineeRepository {
@@ -57,7 +61,7 @@ public class TraineeRepository {
         }
     }
 
-   public void updateStatus(String username, boolean status) {
+    public void updateStatus(String username, boolean status) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.createQuery("update User u set u.active = :status where u.username = :username")
@@ -68,6 +72,13 @@ public class TraineeRepository {
         }
     }
 
+    public List<Training> getTrainings(String username) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("select t from Training t where t.trainee.user.username = :username", Training.class)
+                    .setParameter("username", username)
+                    .getResultList();
+        }
+    }
 
 
 }
