@@ -21,5 +21,4 @@ public class SpringInitializer implements WebMvcConfigurer {
                 new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build()
         ).buildMetadata().buildSessionFactory();
     }
-
 }

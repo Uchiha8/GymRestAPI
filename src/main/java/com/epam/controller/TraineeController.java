@@ -5,12 +5,15 @@ import com.epam.dto.response.RegistrationResponse;
 import com.epam.dto.response.UpdateTraineeResponse;
 import com.epam.service.TraineeService;
 import com.epam.utils.validation.ValidModule;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/trainees")
+@Api(tags = "Trainees API", description = "Operations related to trainings")
 public class TraineeController {
     private final TraineeService traineeService;
     private final ValidModule validModule;
@@ -22,6 +25,7 @@ public class TraineeController {
     }
 
     @PostMapping("/register")
+    @ApiOperation(value = "Registers provided Trainee Profile", notes = "Get username and password of trainee")
     public ResponseEntity<?> register(@RequestBody TraineeRegistrationRequest request) {
         try {
             validModule.traineeRegistration(request);
