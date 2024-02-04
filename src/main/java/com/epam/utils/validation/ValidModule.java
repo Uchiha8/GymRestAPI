@@ -2,7 +2,6 @@ package com.epam.utils.validation;
 
 import com.epam.domain.TrainingType;
 import com.epam.dto.request.*;
-import com.epam.utils.exception.UserNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
