@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private static final Logger logger = LogManager.getLogger(UserController.class);
     private final UserService userService;
+
     private final ValidModule validModule;
 
     @Autowired
