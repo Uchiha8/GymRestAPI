@@ -3,7 +3,7 @@
 ### How to run
 
 * Configure java 21 version
-* Developed using PostgresSQL relational database()
+* Developed using PostgresSQL relational database(databse name = 'hibernate', password = #####)
 * Recommended Tomcat 10.1 server in order to deploy our artifact files
 
 ### Architecture of Application
