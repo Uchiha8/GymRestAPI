@@ -50,7 +50,7 @@ public class TrainerController {
         try {
             validModule.updateTrainer(request);
             UpdateTrainerResponse response = trainerService.update(request);
-            return ResponseEntity.status(201).body(response);
+            return ResponseEntity.status(200).body(response);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

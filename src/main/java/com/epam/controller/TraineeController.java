@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/trainees")
-@Api(tags = "Trainees API", description = "Operations related to trainings")
 public class TraineeController {
     private final TraineeService traineeService;
     private final ValidModule validModule;
@@ -25,7 +24,6 @@ public class TraineeController {
     }
 
     @PostMapping("/register")
-    @ApiOperation(value = "Registers provided Trainee Profile", notes = "Get username and password of trainee")
     public ResponseEntity<?> register(@RequestBody TraineeRegistrationRequest request) {
         try {
             validModule.traineeRegistration(request);
