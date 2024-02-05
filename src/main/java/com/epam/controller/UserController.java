@@ -31,8 +31,10 @@ public class UserController {
             validModule.login(request);
             User user = userService.findByUsername(request.username());
             if (user.getPassword().equals(request.password())) {
+                logger.info("Login successful");
                 return ResponseEntity.ok().body("Login successful");
             } else {
+                logger.info("Wrong password");
                 return ResponseEntity.badRequest().body("Wrong password");
             }
         } catch (RuntimeException e) {
